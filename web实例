@@ -1,0 +1,120 @@
+一、环境说明
+nginx的server服务器配置
+ip: 192.168.190.167
+
+nginx的clinet客户端服务器
+ip: 192.168.190.168
+ip: 192.168.190.169
+
+二、配置
+（一）server服务端用于连接外网服务，并用于解析外网域名，同时指定内网负载均衡客户端
+
+#】vim  /etc/nginx/nginx.conf                      （nginx服务基础配置文件）
+user nginx;
+worker_processes auto;
+error_log /home/nginx/logs/error.log error;
+pid /run/nginx.pid;
+events {
+    worker_connections 51200;
+}
+http {
+     log_format  main  '$time_iso8601|$msec|$remote_addr|$http_x_forwarded_for|"$request"|$status|'
+                '"$http_user_agent"|"$http_referer"|'
+                '$request_time|$request_length|$body_bytes_sent|$upstream_response_time|$bytes_sent';
+     access_log  /home/nginx/logs/access.log  main;
+     include             /etc/nginx/mime.types;
+     default_type        application/octet-stream;
+#以下内容可选用
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   300s 300s;
+    keepalive_requests  10000;
+    types_hash_max_size 2048;
+    server_names_hash_bucket_size 128;
+#指定主配置文件
+    include /etc/nginx/conf.d/nginx.conf;
+}
+
+#]vim /etc/nginx/conf.d/nginx.conf
+#配置负载均衡
+upstream cloudbuild {
+server 192.168.190.168:443 weight=10;
+server 192.168.190.168:443 weight=10;
+}
+
+server {
+        listen       80;
+        server_name  nginx.jason.hason.com;                           （内部代理域名）
+        access_log /home/nginx/logs/nginx.log prod;
+        location / {
+                include /etc/nginx/sub-cloudbuild.conf;      （算法）
+                proxy_pass https://jason.cloudbuild;                  （外网域名，在dns上配置此域名）
+        }
+    }
+
+server {
+        listen       443;
+        server_name  nginx.jason.hason.com;
+        access_log /home/nginx/logs/nginx.log prod;
+#证书参见证书制作过程
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_certificate /etc/nginx/ssl_cert/nginx.crt;
+        ssl_certificate_key /etc/nginx/ssl_cert/nginx.crt.key;
+        ssl_session_timeout 5m;
+        location / {
+                include /etc/nginx/sub-cloudbuild.conf;
+                proxy_pass https://jason.cloudbuild;                    （外网域名）
+        }
+    }
+
+（二） client服务端
+
+将index.html文件保存到/usr/share/nginx/html路径下，下面的各种*.log文件也可以单独存到一个目录中
+
+#】vim  /etc/nginx/nginx.conf
+user  nginx;
+worker_processes  auto;
+error_log  /data/error.log warn;
+pid        /var/run/nginx.pid;
+events {
+    worker_connections  1024;
+}
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+    access_log  /data/access.log  main;
+    sendfile        on;
+    keepalive_timeout  65;
+    include /etc/nginx/conf.d/*.conf;
+}
+
+#]vim /etc/nginx/conf.d/nginx.conf
+server {
+    listen       80;
+    server_name  nginx.jason.hason.com;
+    access_log  /data/http.access.log  main;
+
+    location / {
+        root   /usr/share/nginx/html;
+    }
+}
+
+server {
+        listen       443 ssl;
+        server_name  nginx.jason.hason.com;
+        access_log  /data/https.access.log  main;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_certificate /etc/nginx/ssl_cert/nginx.crt;
+        ssl_certificate_key /etc/nginx/ssl_cert/nginx.crt.key;
+        ssl_session_timeout 5m;
+        location / {
+                root   /usr/share/nginx/html;
+        }
+}
+三、客户端访问
+客户端访问http://nginx.jason.hason.com通过80端口访问此页面
+客户端访问https://nginx.jason.hason.com通过443代理端口访问此页面
