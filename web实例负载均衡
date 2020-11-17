@@ -45,7 +45,7 @@ server 192.168.190.168:443 weight=10;
 
 server {
         listen       80;
-        server_name  nginx.jason.hason.com;                           （内部代理域名）
+        server_name  nginx.jason.hason.com;                           （内部代理域名,配置前做域名解析）
         access_log /home/nginx/logs/nginx.log prod;
         location / {
                 include /etc/nginx/sub-cloudbuild.conf;      （算法）
