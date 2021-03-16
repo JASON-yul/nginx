@@ -1,4 +1,5 @@
 参考文档：https://blog.csdn.net/tjcyjd/article/details/50695922
+https://www.cnblogs.com/kevingrace/p/6566119.html
 1、安装Nginx
 在安装Nginx之前，需确保系统已经安装了gcc、 openssl-devel、 pcre-devel和zlib-devel软件库。
 下面是Nginx安装过程：
