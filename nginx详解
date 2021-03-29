@@ -185,7 +185,8 @@ root指令用于指定虚拟主机的网页根目录，这个目录可以是相�
 最后的main用于指定访问日志的输出格式。
 
 2.6 location URL匹配配置
-URL地址匹配是进行Nginx配置中最灵活的部分。 location支持正则表达式匹配，也支持条件判断匹配，用户可以通过location指令实现Nginx对动、静态网页进行过滤处理。使用location URL匹配配置还可以实现反向代理，用于实现PHP动态解析或者负载负载均衡。
+URL地址匹配是进行Nginx配置中最灵活的部分。 location支持正则表达式匹配，也支持条件判断匹配，用户可以通过location指令实现Nginx对动、静态网页进行过滤处理。
+使用location URL匹配配置还可以实现反向代理，用于实现PHP动态解析或者负载负载均衡。
 以下这段设置是通过location指令来对网页URL进行分析处理，所有扩展名以.gif、.jpg、.jpeg、.png、.bmp、.swf结尾的静态文件都交给nginx处理，而expires用来指定静态文件的过期时间，这里是30天。
 
 location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$ {
@@ -198,7 +199,7 @@ location ~ ^/(upload|html)/ {
 root /web/wwwroot/www.cszhi.com;
 expires 30d;
 }
-在最后这段设置中，location是对此虚拟主机下动态网页的过滤处理，也就是将所有以.jsp为后缀的文件都交给本机的8080端口处理。
+在最后这段设置中，location是对此虚拟主机下动态网页的过滤处理，也就是将所有以.php为后缀的文件都交给本机的8080端口处理。
 
 location ~ .*.php$ {
 index index.php;
@@ -243,3 +244,5 @@ root html;
 }
 }
 整理自：http://ixdba.blog.51cto.com/2895551/790611
+
+
