@@ -19,3 +19,17 @@ nginx2
 host表
 10.244.71.138  kwepwebenv10147.new.com
 
+发送get请求
+http://10.243.215.42:9002/edu
+
+注：参考
+
+# 请求跨域，约定代理后端服务请求path以/apis/开头
+location ^~/apis/ {
+    # 这里重写了请求，将正则匹配中的第一个分组的path拼接到真正的请求后面，并用break停止后续匹配
+    rewrite ^/apis/(.*)$ /$1 break;
+    proxy_pass be.sherlocked93.club;
+  
+    # 两个域名之间cookie的传递与回写
+    proxy_cookie_domain be.sherlocked93.club fe.sherlocked93.club;
+}
