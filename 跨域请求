@@ -1,0 +1,21 @@
+即前面的正反向代理继续：
+nginx1
+新增域名反向代理服务
+----
+server {
+        listen       9002;
+        server_name   nginx.huawei.com;
+        location ^~ /edu/ {
+            proxy_pass http://kwepwebenv10147.new.com:8999/;
+        }
+    }
+----
+
+nginx2
+1.配置域名（本例只在/etc/hosts下配置，个人机器需要配置host表）
+#vim  /etc/hosts
+10.244.71.138  kwepwebenv10147.new.com
+
+host表
+10.244.71.138  kwepwebenv10147.new.com
+
