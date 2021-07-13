@@ -32,7 +32,7 @@ http {
     server {
         listen       800;
    #     listen       [::]:80;
-        server_name   nginx.huawei.com;
+        server_name   nginx.new.com;
    #     include /etc/nginx/default.d/*.conf;
         location / {
             proxy_pass http://10.244.71.138:8999;         #反向代理nginx2的服务
@@ -42,7 +42,7 @@ http {
     }
     server {
         listen       9001;
-        server_name   nginx.huawei.com;
+        server_name   nginx.new.com;
         location ^~ /wod/ {                             #用http://10.243.215.42:9001/wod 反向代理http://10.244.71.138:8999/（注意 ^~ 和 8999/要写全）
             proxy_pass http://10.244.71.138:8999/;
         }
@@ -54,7 +54,7 @@ nginx2（客户端和后台测试服务端）10.244.71.138
 #vim conf.d/default.conf    （子配置文件只需要配置server即可）
 server {
   listen 8999;
-        server_name nginx.huawei.com;
+        server_name nginx.new.com;
 
         location / {
                root  /usr/share/nginx/html/fe;
