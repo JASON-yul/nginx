@@ -43,8 +43,8 @@ http {
     server {
         listen       9001;
         server_name   nginx.new.com;
-        location ^~ /wod/ {                             #用http://10.243.215.42:9001/wod 反向代理http://10.244.71.138:8999/（注意 ^~ 和 8999/要写全）
-            proxy_pass http://10.244.71.138:8999/;
+        location ^~ /wod/ {                             #约定代理后端请求path以/wod/开头
+            proxy_pass http://10.244.71.138:8999/;      #用http://10.243.215.42:9001/wod 反向代理http://10.244.71.138:8999/（注意 ^~ 和 8999/要写全）
         }
     }
 }
