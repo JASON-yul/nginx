@@ -1,0 +1,5 @@
+参考：https://blog.csdn.net/qq_30038111/article/details/79794377
+
+# 最简单的使用
+# -c：一次并发请求的数量；-n：请求总次数
+ab -c 5000 -n 200000 http://192.168.222.101:80/index.html
