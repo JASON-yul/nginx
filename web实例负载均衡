@@ -119,3 +119,6 @@ server {
 三、客户端访问
 客户端访问http://nginx.jason.hason.com通过80端口访问此页面
 客户端访问https://nginx.jason.hason.com通过443代理端口访问此页面
+
+
+压力测试：ab -c 500 -n 2000000  http://nginx.jason.hason.com
