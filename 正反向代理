@@ -49,6 +49,7 @@ http {
     }
 }
 
+
 nginx2（客户端和后台测试服务端）10.244.71.138
 主配置文件nginx.conf默认不变
 #vim conf.d/default.conf    （子配置文件只需要配置server即可）
